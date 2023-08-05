@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+import store from "../store/store";
 import booksData from "../data/landing-books-data.json";
 function Gallery() {
   const [data, setData] = useState([]);
@@ -12,10 +15,26 @@ function Gallery() {
       }
     }
   }, [renderNum]);
-  console.log(data.length, renderNum)
+  console.log(data.length, renderNum);
   const showMore = (num, event) => {
     event.preventDefault();
     setRenderNum((prevNum) => prevNum * num);
+  };
+
+  const handleClick = (event, id, title, imageLink, description) => {
+    event.preventDefault();
+
+    store.dispatch({
+      type: "ADD_TO_FAVORITE",
+      payload: {
+        bookId: id,
+        bookTitle: title,
+        bookImage: imageLink,
+        bookDescription: description,
+      },
+    });
+
+    console.log(store.getState());
   };
   return (
     <React.Fragment>
@@ -42,7 +61,20 @@ function Gallery() {
                   />
 
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
-
+                  <FontAwesomeIcon
+                    icon={regularHeart}
+                    size="2x"
+                    className="absolute top-2 right-2 text-indigo-500 hover:text-red-500 focus:bg-red-500  cursor-pointer"
+                    onClick={(event) =>
+                      handleClick(
+                        event,
+                        e.id,
+                        e.title,
+                        e.imageLink,
+                        e.description
+                      )
+                    }
+                  />
                   <span className="relative ml-4 mb-3 font-bold text-left inline-block text-sm text-white md:text-lg">
                     {e.title}
                   </span>

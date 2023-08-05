@@ -1,8 +1,19 @@
-import React from "react";
+import React, { ReactDOM, useState, useEffect } from "react";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { Link } from "react-router-dom";
+import AddToFavorite from "./AddToFavorite";
+import AccountDropMenu from "./AccountDropMenu";
 function Header() {
   let isLogged = useSelector((state) => state.auth.isLogged);
+  const [AccountDropMenuState, setAccountDropMenu] = useState(false);
+  const [LikedDropMenuState, setLikedDropMenu] = useState(false);
+  const toggleAccountDropMenu = () => {
+    setAccountDropMenu((prevValue) => !prevValue);
+  };
+  const toggleLikedDropMenu = () => {
+    setLikedDropMenu((prevValue) => !prevValue);
+  };
+
   return (
     <React.Fragment>
       <div className="bg-white pb-6 sm:pb-8 lg:pb-12">
@@ -26,9 +37,10 @@ function Header() {
               </a>
             </nav>
             <div className="flex divide-x border-r sm:border-l">
-              <a
+              <button
                 href="#"
                 className="hidden h-12 w-12 flex-col items-center justify-center gap-1.5 transition duration-100 hover:bg-gray-100 active:bg-gray-200 sm:flex sm:h-20 sm:w-20 md:h-24 md:w-24"
+                onClick={toggleLikedDropMenu}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -48,8 +60,7 @@ function Header() {
                 <span className="hidden text-xs font-semibold text-gray-500 sm:block">
                   Liked
                 </span>
-              </a>
-
+              </button>
               <a
                 href="#"
                 className="flex h-12 w-12 flex-col items-center justify-center gap-1.5 transition duration-100 hover:bg-gray-100 active:bg-gray-200 sm:h-20 sm:w-20 md:h-24 md:w-24"
@@ -74,9 +85,9 @@ function Header() {
                 </span>
               </a>
               {isLogged ? (
-                <a
-                  href="#"
+                <button
                   className="flex h-12 w-12 flex-col items-center justify-center gap-1.5 transition duration-100 hover:bg-gray-100 active:bg-gray-200 sm:h-20 sm:w-20 md:h-24 md:w-24"
+                  onClick={toggleAccountDropMenu}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -93,10 +104,13 @@ function Header() {
                     />
                   </svg>
 
-                  <span className="hidden text-xs font-semibold text-gray-500 sm:block">
+                  <span
+                    className="hidden text-xs font-semibold text-gray-500 sm:block"
+                    id="account-button"
+                  >
                     Account
                   </span>
-                </a>
+                </button>
               ) : (
                 <>
                   <Link
@@ -133,6 +147,7 @@ function Header() {
                   </Link>
                 </>
               )}
+
               <button
                 type="button"
                 className="flex h-12 w-12 flex-col items-center justify-center gap-1.5 transition duration-100 hover:bg-gray-100 active:bg-gray-200 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:hidden"
@@ -156,6 +171,8 @@ function Header() {
               </button>
             </div>
           </div>
+          {AccountDropMenuState && <AccountDropMenu />}
+          {LikedDropMenuState && <AddToFavorite />}
         </header>
       </div>
     </React.Fragment>
